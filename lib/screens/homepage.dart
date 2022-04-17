@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:hallo_app/screens/product_detail.dart';
+import 'product_detail.dart';
 import 'package:http/http.dart' as http;
+import 'add_product.dart';
 
 import 'edit_product.dart';
 
@@ -15,137 +16,138 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final String? url = 'http://172.20.10.3:8000/api/authors';
+  final String? url = 'http://192.168.98.207:8000/api/authors';
 
   //android emulator http://10.0.2.2
-  Future <List<dynamic>> getProducts() async {
+  Future<List<dynamic>> getProducts() async {
     var response = await http.get(Uri.parse(url!));
     print(json.decode(response.body));
     return json.decode(response.body);
   }
 
   Future deleteProduct(String product) async {
-    String url = "http://172.20.10.3:8000/api/authors" + product;
-    
+    String url = "http://192.168.98.207:8000/api/authors/" + product;
+
     var response = await http.delete(Uri.parse(url));
-    return json.decode(response.body);
+    //return json.decode(response.body);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AddProduct()));
+          },
+          child: Icon(Icons.add),
+        ),
         appBar: AppBar(
           title: Text('Rollo Store'),
         ),
         body: FutureBuilder(
-          future: getProducts(),
-          builder: (context,AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, int index) {
-              return Container(
-                height: 180,
-                child: Card(
-                    elevation: 5,
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: (){
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context)=>
-                                      ProductDetail(product: snapshot.data['data']
-                                          [index],
-                                    )));
-                            },
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            height: 120,
-                            width: 120,
-                            child: Image.network(
-                              snapshot.data[index]['name'],
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.all(10.0),
-                            child: Column(
-                              mainAxisAlignment: 
-                                  MainAxisAlignment.spaceAround,
-                              children: [
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    snapshot.data[index]['name'],
-                                    style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold),
+            future: getProducts(),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, int index) {
+                      return Container(
+                        height: 180,
+                        child: Card(
+                          elevation: 5,
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProductDetail(
+                                                product: snapshot.data[index],
+                                              )));
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  height: 120,
+                                  width: 120,
+                                  child: Image.asset(
+                                    "assets/img/buah.jpeg",
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(snapshot.data[index]
-                                    ['email']),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
+                              ),
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
                                     children: [
-                                      GestureDetector(
-                                      onTap: (){
-                                        Navigator.push(
-                                          context, 
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                              EditProduct(product: snapshot
-                                                                      .data
-                                                              [index],
-                                              )));
-                                      },
-                                      child: Icon(Icons.edit)),
-                                      GestureDetector(
-                                      onTap: (){
-                                        deleteProduct(snapshot
-                                                  .data[index]
-                                                            ['id']
-                                                  .toString())
-                                            .then((value){
-                                          setState(() {});
-                                          ScaffoldMessenger.of(
-                                                    context)
-                                              .showSnackBar(SnackBar(
-                                            content: Text(
-                                                "Produk berhasil di hapus"),
-                      ));
-                                          });
-                                      },
-                                      child: Icon(Icons.delete)),
-                                    ]
-                                    ),
-                                    Text(snapshot.data[index]
-                                            ['github']
-                                        .toString())
-                                  ],
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          snapshot.data[index]['name'],
+                                          style: TextStyle(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child:
+                                            Text(snapshot.data[index]['email']),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(children: [
+                                            GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              EditProduct(
+                                                                product: snapshot
+                                                                        .data[
+                                                                    index],
+                                                              )));
+                                                },
+                                                child: Icon(Icons.edit)),
+                                            GestureDetector(
+                                                onTap: () {
+                                                  deleteProduct(snapshot
+                                                          .data[index]['id']
+                                                          .toString())
+                                                      .then((value) {
+                                                    setState(() {});
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                            content: Text(
+                                                                "Produk berhasil di hapus")));
+                                                  });
+                                                },
+                                                child: Icon(Icons.delete)),
+                                          ]),
+                                          Text(snapshot.data[index]['github']
+                                              .toString())
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              });
-            } else {
+                      );
+                    });
+              } else {
                 return Text('Data ERROR');
               }
             }));
-  
   }
 }

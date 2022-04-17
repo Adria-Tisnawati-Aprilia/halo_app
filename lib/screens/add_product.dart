@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:hallo_app/screens/homepage.dart';
+import 'homepage.dart';
 import 'package:http/http.dart' as http;
 
 class  AddProduct extends StatelessWidget {
@@ -14,7 +14,7 @@ class  AddProduct extends StatelessWidget {
   TextEditingController _latestController = TextEditingController();
   Future saveProduct() async {
     final response = 
-      await http.post(Uri.parse("http://172.20.10.3:8000/api/authors"), body: {
+      await http.post(Uri.parse("http://192.168.98.207:8000/api/authors"), body: {
         "name": _nameController.text.toString(),
         "email": _emailController.text.toString(),
         "github": _githubController.text.toString(),

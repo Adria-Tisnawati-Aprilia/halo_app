@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 
-import 'add_product.dart';
-
 class ProductDetail extends StatelessWidget {
   final Map product;
-  
+
   ProductDetail({required this.product});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Product Detail"),
+        title: Text("Author Detail"),
       ),
       body: Column(
         children: [
           Container(
-            child: Image.network(product['image_url']),
+            child: Image.asset(
+              "assets/img/buah.jpeg",
+              width: 300,
+            ),
           ),
           SizedBox(
             height: 20,
@@ -27,17 +28,18 @@ class ProductDetail extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  product['price'], 
+                  product['email'],
                   style: TextStyle(fontSize: 22),
                 ),
                 Row(
-                  children: [Icon(Icons.edit), Icon(Icons.delete)]
+                  children: [Icon(Icons.edit), Icon(Icons.delete)],
                 )
               ],
             ),
-          )
+          ),
+          Text(product['github']),
         ],
-      )
+      ),
     );
   }
 }
